@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Elephant Game Reloaded</title>
+	<script type="text/javascript" src="js/pixi.js"></script>
+	<script type="text/javascript" src="js/Elephant.js"></script>
+	<script type="text/javascript" src="js/Tree.js"></script>
+	<script type="text/javascript" src="js/bump.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+
+		var app = new PIXI.Application(window.innerWidth, window.innerHeight, {backgroundColor : 0xffffff});
+		document.body.appendChild(app.view);
+		app.stage.interactive = true;
+
+		var b = new Bump(PIXI);
+		var score = 0;
+
+		var elephant = new Elephant(window.innerWidth, window.innerHeight);
+		document.addEventListener("keydown", elephant.jump);
+		app.stage.addChild(elephant.getSprite());
+
+		var time = (Math.random() + 0.8) * 1.8;
+		var generatingInterval = setInterval(generateTrees, time * 1000);
+		
+		const style = new PIXI.TextStyle({
+	    fill: [
+	        "#555",
+	        "#a3a3a3"
+	    ],
+	    fillGradientStops: [
+	        0.5
+	    ],
+	    fontFamily: "\"Palatino Linotype\", \"Book Antiqua\", Palatino, serif",
+	    fontSize: 32,
+	    fontVariant: "small-caps",
+	    fontWeight: 900,
+	    letterSpacing: 8,
+	    miterLimit: 20,
+	    stroke: "silver",
+	    strokeThickness: 1
+	});
+
+		var loadingText = new PIXI.Text('The battle is about to begin...', style);
+		loadingText.width = 600;
+		loadingText.anchor.set(0.5);
+		loadingText.x = window.innerWidth / 2;
+		loadingText.y = 90;
+		TweenLite.to(loadingText, time + 1.5, {width: 0, height: 0, onComplete: function(){
+				app.stage.removeChild(loadingText);
+				}, ease:Power0.easeNone});
+
+		app.stage.addChild(loadingText);
+
+		function generateTrees(){
+			var tree = new Tree(window.innerWidth, window.innerHeight);
+			app.stage.addChild(tree.getSprite());
+			var time = (Math.random() + 0.8) * 1.8;
+			clearInterval(generatingInterval);
+			generatingInterval = setInterval(generateTrees, time * 1000);
+		}
+
+
+
+
+	</script>
+</body>
+</html>
